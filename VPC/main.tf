@@ -1,6 +1,6 @@
 # Create a VPC
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
   tags = {
     Name = "main"
   }
@@ -8,7 +8,7 @@ resource "aws_vpc" "main" {
 #Create public subnet
 resource "aws_subnet" "public_subnet" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+  cidr_block = var.pub_subnet_cidr
   availability_zone = "us-east-1a"
 tags = {
     Name = "Public Subnet"
@@ -18,7 +18,7 @@ tags = {
 #Create private subnet
 resource "aws_subnet" "private_subnet" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.2.0/24"
+  cidr_block = var.prv_subnet_cidr
   availability_zone = "us-east-1b"
   tags = {
     Name = "Private Subnet"
@@ -62,13 +62,14 @@ resource "aws_route_table" "private-rt" {
 
 
 # Rout table association with public subnet
+
 resource "aws_route_table_association" "a" {
-  subnet_id      = "subnet-0f30d8dc170627dd5"
-  route_table_id = "rtb-082658383ee44c0a0"
+  subnet_id      = aws_subnet.public_subnet.id
+route_table_id   = aws_route_table.public-rt.id
 }
 
 # Rout table association with private subnet
 resource "aws_route_table_association" "b" {
-  subnet_id      = "subnet-0dc4b56353dae4a9a"
-  route_table_id = "rtb-0fd9438adbe1a9f76"
+  subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private-rt.id
 }
