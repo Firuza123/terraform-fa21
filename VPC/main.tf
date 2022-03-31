@@ -8,10 +8,9 @@ resource "aws_vpc" "main" {
 #Create public subnet
 resource "aws_subnet" "public_subnet" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.pub_subnet_cidr
-availability_zone = "us-east-1a"
-
-  tags = {
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
+tags = {
     Name = "Public Subnet"
   }
 }
@@ -19,8 +18,8 @@ availability_zone = "us-east-1a"
 #Create private subnet
 resource "aws_subnet" "private_subnet" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.prv_subnet_cidr
-availability_zone = "us-east-1b"
+  cidr_block = "10.0.2.0/24"
+  availability_zone = "us-east-1b"
   tags = {
     Name = "Private Subnet"
   }
@@ -41,37 +40,35 @@ resource "aws_route_table" "public-rt" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.internet_gateway.id
   }
-
- tags = {
+  tags = {
     Name = "Public Route Table"
   }
 }
 
-# Route Table Association with Public Subnet
-resource "aws_route_table_association" "a" {
-  subnet_id      = "subnet-0ef2820e6a329f45d"
-  route_table_id = "rtb-07d63de29755b34b9"
-}
 
-# Creating Private Route Table
-resource "aws_route_table" "private_route_table" {
+# Create Private Route Table 
+resource "aws_route_table" "private-rt" {
   vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.internet_gateway.id
   }
-
-  tags = {
-    Name = "Private Route Table"
+ tags = {
+    Name = "private Route Table"
   }
 }
 
 
-# Route Table association with Private Subnet
-resource "aws_route_table_association" "b" {
-  subnet_id      = aws_subnet.private_subnet.id
-  route_table_id = aws_route_table.private_route_table.id
+
+# Rout table association with public subnet
+resource "aws_route_table_association" "a" {
+  subnet_id      = "subnet-0f30d8dc170627dd5"
+  route_table_id = "rtb-082658383ee44c0a0"
 }
 
-
+# Rout table association with private subnet
+resource "aws_route_table_association" "b" {
+  subnet_id      = "subnet-0dc4b56353dae4a9a"
+  route_table_id = "rtb-0fd9438adbe1a9f76"
+}
