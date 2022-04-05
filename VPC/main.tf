@@ -2,7 +2,7 @@
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
   tags = {
-    Name = "main"
+    Name = "VPC-${var.tag}"
   }
 }
 #Create public subnet
@@ -11,7 +11,7 @@ resource "aws_subnet" "public_subnet" {
   cidr_block = var.pub_subnet_cidr
   availability_zone = var.av_zones.1
 tags = {
-    Name = "Public Subnet"
+    Name = "Public-${var.tag}"
   }
 }
 
@@ -21,7 +21,7 @@ resource "aws_subnet" "private_subnet" {
   cidr_block = var.prv_subnet_cidr
   availability_zone = var.av_zones.2
   tags = {
-    Name = "Private Subnet"
+    Name = "Private-${var.tag}"
   }
 }
 # Creating Internet Gateway
@@ -29,7 +29,7 @@ resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "my gitw"
+    Name = "Internet-${var.tag}"
   }
 }
 # Create Public Route Table 
@@ -41,11 +41,9 @@ resource "aws_route_table" "public-rt" {
     gateway_id = aws_internet_gateway.internet_gateway.id
   }
   tags = {
-    Name = "Public Route Table"
+    Name = "Public-${var.tag}-Table"
   }
 }
-
-
 # Create Private Route Table 
 resource "aws_route_table" "private-rt" {
   vpc_id = aws_vpc.main.id
@@ -55,7 +53,7 @@ resource "aws_route_table" "private-rt" {
     gateway_id = aws_internet_gateway.internet_gateway.id
   }
  tags = {
-    Name = "private Route Table"
+    Name = "private${var.tag}-Table"
   }
 }
 
