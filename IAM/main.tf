@@ -2,10 +2,10 @@
 
 # I am creating dev user
 resource "aws_iam_user" "dev-user" {
-  name = "John"
+  name = "Rumiy"
 }
 resource "aws_iam_user" "dev-user2" {
-  name = "Tom"
+  name = "Navoiy"
 }
 # I am creating IAM group
 resource "aws_iam_group" "developers" {
